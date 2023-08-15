@@ -6,4 +6,3 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(first main.cpp
 )
-include_directories("include")
