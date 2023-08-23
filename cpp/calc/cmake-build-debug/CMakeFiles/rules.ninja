@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /opt/clion/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/cirno/Projects/cpp/first -B/home/cirno/Projects/cpp/first/cmake-build-debug
+  command = /opt/clion/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/cirno/Projects/small-tasks/cpp/calc -B/home/cirno/Projects/small-tasks/cpp/calc/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 

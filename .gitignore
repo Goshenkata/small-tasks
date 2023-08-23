@@ -1,1 +1,3 @@
 include/
+.idea/
+cmake-build-debug/
