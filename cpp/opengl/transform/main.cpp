@@ -4,6 +4,10 @@
 #include <iostream>
 #include "stb_image.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 void frameBufferSizeCallback([[maybe_unused]]GLFWwindow *window, int width, int height);
 
 void processInput(GLFWwindow *pWwindow, Shader* shader);
@@ -32,8 +36,8 @@ int main() {
         return -1;
     }
 
-    auto vertexShaderPath = "/home/cirno/Projects/small-tasks/cpp/opengl/traingle3/shader.vert";
-    auto fragmentShaderPath = "/home/cirno/Projects/small-tasks/cpp/opengl/traingle3/shader.frag";
+    auto vertexShaderPath = "/home/cirno/Projects/small-tasks/cpp/opengl/transform/shader.vert";
+    auto fragmentShaderPath = "/home/cirno/Projects/small-tasks/cpp/opengl/transform/shader.frag";
 
     Shader shader(vertexShaderPath, fragmentShaderPath);
 
@@ -42,11 +46,17 @@ int main() {
             0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
             0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
             -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f,    // top left
+            0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
             -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
     };
     unsigned int indices[] = {
         0, 1,3,
-        1,2,3
+        1,2,3,
+        4,5,6,
+        5,5,6
     };
     unsigned int VAO, VBO, EBO;
 
@@ -125,11 +135,21 @@ int main() {
 
         // render container
         shader.setFloat("visibility", visibility);
-
-        shader.use();
         glBindVertexArray(VAO);
+
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, (float) glfwGetTime(), glm::vec3(0.0, 0.0,1.0));
+        shader.setMatrix4f("transform", glm::value_ptr(trans));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+        //second
+        trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+        float scale = (float) glm::sin(glfwGetTime());
+        trans = glm::scale(trans,glm::vec3(scale, scale, 1.0f));
+        shader.setMatrix4f("transform", glm::value_ptr(trans));
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
 
